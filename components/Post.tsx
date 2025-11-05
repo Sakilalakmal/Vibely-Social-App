@@ -1,15 +1,16 @@
 import { COLORS } from "@/app/constants/colors";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { mutation } from "@/convex/_generated/server";
 
 import { styles } from "@/styles/feed.styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
+import { formatDistanceToNow } from "date-fns";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import CommentModel from "./CommentModel";
 
 //interface
 type PostProps = {
@@ -33,6 +34,8 @@ type PostProps = {
 export default function Post({ post }: PostProps) {
   const [liked, setLiked] = useState(post.isLiked);
   const [likesCount, setLikesCount] = useState(post.likes);
+  const [commentsCount, setCommentsCount] = useState(post.comments);
+  const [showComments, setShowComments] = useState(false);
 
   const toggleLike = useMutation(api.posts.toggleLike);
 
@@ -86,7 +89,11 @@ export default function Post({ post }: PostProps) {
               color={liked ? COLORS.primary : COLORS.white}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              setShowComments(true);
+            }}
+          >
             <Ionicons
               name="chatbubble-outline"
               size={22}
@@ -105,7 +112,29 @@ export default function Post({ post }: PostProps) {
             ? `${post.likes.toLocaleString()} likes`
             : "Be the first to like"}
         </Text>
+
+        {post.caption && (
+          <View style={styles.captionContainer}>
+            <Text style={styles.captionUsername}>{post.author.username}</Text>
+            <Text style={styles.captionText}>{post.caption}</Text>
+          </View>
+        )}
+
+        {post.comments > 0 && (
+          <TouchableOpacity onPress={() => setShowComments(true)}>
+            <Text style={styles.commentsText}>
+              View all {post.comments} comments
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
+
+      <CommentModel
+        postId={post._id}
+        visible={showComments}
+        onClose={() => setShowComments(false)}
+        onCommentAdded={() => setCommentsCount((prev) => prev + 1)}
+      />
     </View>
   );
 }

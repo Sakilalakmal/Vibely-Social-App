@@ -1,14 +1,20 @@
-import StoryUi from "@/components/Story";
+import { Loader } from "@/components/Loader";
+import Post from "@/components/Post";
 import { api } from "@/convex/_generated/api";
 import { styles } from "@/styles/feed.styles";
 import { useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { COLORS } from "../constants/colors";
 import { STORIES } from "../constants/mock.data";
-import { Loader } from "@/components/Loader";
-import Post from "@/components/Post";
+import StoryUi from "@/components/Story";
 
 export default function HomeScreen() {
   const { signOut } = useAuth();
@@ -33,20 +39,14 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.storiesContainer}
-        >
-          {STORIES.map((story) => (
-            <StoryUi key={story.id} story={story} />
-          ))}
-        </ScrollView>
-        {posts.map((post) => (
-          <Post key={post._id} post={post} />
-        ))}
-      </ScrollView>
+      <FlatList
+        data={posts}
+        renderItem={({ item }) => <Post post={item} />}
+        keyExtractor={(item) => item._id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        ListHeaderComponent={<StoriesSection />}
+      />
     </View>
   );
 }
@@ -63,3 +63,17 @@ const NoPostsFound = () => (
     <Text style={{ fontSize: 20, color: COLORS.primary }}>No posts yet</Text>
   </View>
 );
+
+const StoriesSection = () => {
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.storiesContainer}
+    >
+      {STORIES.map((story) => (
+        <StoryUi key={story.id} story={story} />
+      ))}
+    </ScrollView>
+  );
+};
