@@ -11,6 +11,7 @@
 import type * as bookmark from "../bookmark.js";
 import type * as comments from "../comments.js";
 import type * as http from "../http.js";
+import type * as notification from "../notification.js";
 import type * as posts from "../posts.js";
 import type * as users from "../users.js";
 
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   bookmark: typeof bookmark;
   comments: typeof comments;
   http: typeof http;
+  notification: typeof notification;
   posts: typeof posts;
   users: typeof users;
 }>;
