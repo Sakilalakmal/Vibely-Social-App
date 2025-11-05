@@ -1,12 +1,15 @@
 import { Loader } from "@/components/Loader";
 import Post from "@/components/Post";
+import StoryUi from "@/components/Story";
 import { api } from "@/convex/_generated/api";
 import { styles } from "@/styles/feed.styles";
 import { useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
+import { useState } from "react";
 import {
   FlatList,
+  RefreshControl,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -14,10 +17,10 @@ import {
 } from "react-native";
 import { COLORS } from "../constants/colors";
 import { STORIES } from "../constants/mock.data";
-import StoryUi from "@/components/Story";
 
 export default function HomeScreen() {
   const { signOut } = useAuth();
+  const [refreshing, setRefreshing] = useState(false);
 
   const posts = useQuery(api.posts.getFeedPosts);
 
@@ -28,6 +31,13 @@ export default function HomeScreen() {
   if (posts?.length === 0) {
     return <NoPostsFound />;
   }
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  };
 
   return (
     <View style={styles.container}>
@@ -46,6 +56,13 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
         ListHeaderComponent={<StoriesSection />}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={COLORS.primary}
+          />
+        }
       />
     </View>
   );
