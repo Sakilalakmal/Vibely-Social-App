@@ -3,13 +3,19 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
 import { styles } from "@/styles/feed.styles";
+import { useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
-import { useMutation } from "convex/react";
-import { formatDistanceToNow } from "date-fns";
+import { useMutation, useQuery } from "convex/react";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import {
+    ActivityIndicator,
+    Alert,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import CommentModel from "./CommentModel";
 
 //interface
@@ -37,9 +43,17 @@ export default function Post({ post }: PostProps) {
   const [likesCount, setLikesCount] = useState(post.likes);
   const [commentsCount, setCommentsCount] = useState(post.comments);
   const [showComments, setShowComments] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const toggleLike = useMutation(api.posts.toggleLike);
   const toggleBookmark = useMutation(api.bookmark.toggleBookMark);
+  const deletePost = useMutation(api.posts.deletePost);
+
+  const { user } = useUser();
+
+  const currentUser = useQuery(api.users.getUserByClerkId, {
+    clerkId: user?.id!,
+  });
 
   const handleLike = async () => {
     try {
@@ -55,6 +69,29 @@ export default function Post({ post }: PostProps) {
     const newIsBookmarked = await toggleBookmark({ postId: post._id });
     setIsBookMarked(newIsBookmarked);
   };
+
+  const handleDeletePost = async () => {
+    setIsDeleting(true);
+    try {
+      Alert.alert("Delete Post", "Are you sure you want to delete this post?", [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            await deletePost({ postId: post._id });
+          },
+        },
+      ]);
+    } catch (error) {
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <View style={styles.post}>
       {/*header*/}
@@ -72,9 +109,25 @@ export default function Post({ post }: PostProps) {
           </TouchableOpacity>
         </Link>
 
-        <TouchableOpacity>
-          <Ionicons name="ellipsis-horizontal" size={20} color={COLORS.white} />
-        </TouchableOpacity>
+        {/* if current user owner of the post let delete it */}
+
+        {post.author._id === currentUser?._id ? (
+          <TouchableOpacity onPress={handleDeletePost}>
+            {isDeleting ? (
+              <ActivityIndicator size="small" color={"red"} />
+            ) : (
+              <Ionicons name="trash-outline" size={18} color={"red"} />
+            )}
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity>
+            <Ionicons
+              name="ellipsis-horizontal"
+              size={20}
+              color={COLORS.white}
+            />
+          </TouchableOpacity>
+        )}
       </View>
 
       {/*post image*/}
