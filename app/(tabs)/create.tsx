@@ -73,6 +73,9 @@ const CreateScreen = () => {
         caption,
       });
 
+      setSelectedImage("");
+      setCaption("");
+
       router.push("/(tabs)");
     } catch (error) {
       console.log("error shareing posts", error);
