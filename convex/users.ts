@@ -85,3 +85,19 @@ export async function getAuthenticatedUser(ctx: QueryCtx | MutationCtx) {
 
   return user;
 }
+
+export const updateUserProfile = mutation({
+  args: {
+    fullname: v.string(),
+    bio: v.optional(v.string()),
+  },
+
+  handler: async (ctx, args) => {
+    const currentUser = await getAuthenticatedUser(ctx);
+
+    await ctx.db.patch(currentUser._id, {
+      fullName: args.fullname,
+      bio: args.bio,
+    });
+  },
+});
