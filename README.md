@@ -1,50 +1,132 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# Vibely
 
-## Get started
+A modern, full-stack social media mobile application built with **React Native (Expo)**, **Convex**, and **Clerk**. Designed to deliver a seamless social experience with features like real-time feeds, secure authentication, image sharing, and instant notifications.
 
-1. Install dependencies
+## 🚀 Key Features
 
-   ```bash
-   npm install
-   ```
+- **🔐 Robust Authentication:** Secure sign-up/login powered by **Clerk** integrated with Convex.
+- **� Social Feed:** Real-time home feed displaying posts from confirmed users.
+- **� Post Creation:** Share moments with image uploads and captions using `expo-image-picker`.
+- **❤️ Interactivity:** Like, comment on posts, and save your favorites with bookmarks.
+- **� Follow System:** Connect with other users through a comprehensive follow/following system.
+- **🔔 Real-time Notifications:** Instant alerts for likes, comments, and new followers.
+- **� User Profiles:** Customizable profiles with bio, stats (followers/following/posts), and post history.
+- **⚡ Real-time Updates:** Powered by **Convex** for instant data synchronization across devices.
 
-2. Start the app
+## 🛠️ Tech Stack
 
-   ```bash
-   npx expo start
-   ```
+### Frontend (Mobile)
 
-In the output, you'll find options to open the app in a
+- **Framework:** React Native (via Expo SDK 52)
+- **Routing:** Expo Router
+- **Language:** TypeScript
+- **Styling:** React Native Styles / Expo System UI
+- **Icons:** Expo Vector Icons / SF Symbols
+- **Image Handling:** Expo Image
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Backend & Services
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Backend-as-a-Service:** Convex (Real-time Database & Functions)
+- **Authentication:** Clerk (User Management)
+- **Storage:** Convex File Storage (for post images)
 
-## Get a fresh project
+## 🏗️ Getting Started
 
-When you're ready, run:
+Follow these steps to set up the project locally.
 
-```bash
-npm run reset-project
+### Prerequisites
+
+- Node.js (v20+ recommended)
+- npm or pnpm or yarn
+- Expo Go app on your physical device (or Android Studio/Xcode for simulators)
+- **Convex** Account
+- **Clerk** Account
+
+### Installation
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/your-username/vibely.git
+    cd vibely
+    ```
+
+2.  **Install dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+3.  **Configure Environment Variables:**
+    Create a `.env` file (or use `.env.local`) and add your Convex and Clerk keys. You will also need to configure Convex:
+
+    ```bash
+    npx convex dev
+    ```
+
+    This command will prompt you to log in and set up your Convex project, automatically generating the necessary environment variables in `.env.local`.
+
+    Ensure your `.env` includes:
+
+    ```env
+    CONVEX_DEPLOYMENT=...
+    NEXT_PUBLIC_CONVEX_URL=...
+    EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=...
+    ```
+
+4.  **Run the Development Server:**
+
+    Start the backend and frontend:
+
+    ```bash
+    # In one terminal, keep the backend syncing
+    npx convex dev
+
+    # In another terminal, start the Expo app
+    npx expo start
+    ```
+
+5.  **View the App:**
+    - Scan the QR code with **Expo Go** (Android/iOS).
+    - Or press `a` for Android Emulator / `i` for iOS Simulator.
+
+## 📁 Project Structure
+
+```
+vibely/
+├── app/                  # Expo Router screens and layouts
+│   ├── (auth)/           # Authentication screens (Login/Signup)
+│   ├── (tabs)/           # Main App Tabs (Home, Create, Profile, etc.)
+│   │   ├── index.tsx     # Home Feed
+│   │   ├── create.tsx    # Create Post
+│   │   ├── profile.tsx   # User Profile
+│   │   └── ...
+│   └── _layout.tsx       # Root layout configuration
+├── components/           # Reusable UI components
+├── convex/               # Backend Logic (Serverless Functions)
+│   ├── schema.ts         # Database Schema
+│   ├── users.ts          # User mutations/queries
+│   ├── posts.ts          # Post logic
+│   ├── auth.config.ts    # Auth configuration
+│   └── ...
+└── assets/               # Static assets (images, fonts)
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🤝 Contributing
 
-## Learn more
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-To learn more about developing your project with Expo, look at the following resources:
+1.  Fork the project
+2.  Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 📝 License
 
-## Join the community
+This project is proprietary and confidential.
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Made with ❤️ by Sakila Lakmal
