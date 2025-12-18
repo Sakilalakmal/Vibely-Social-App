@@ -1,3 +1,4 @@
+<img width="1475" height="675" alt="vibely" src="https://github.com/user-attachments/assets/6bf73e1d-e4ac-427b-9dfa-476a89fd54f3" />
 
 # Vibely
 
